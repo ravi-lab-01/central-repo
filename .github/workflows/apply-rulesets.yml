@@ -1,0 +1,19 @@
+name: Apply GitHub Rulesets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apply-rulesets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run PowerShell script
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: "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"
+        run: |
+          ./scripts/Apply-Rulesets.ps1

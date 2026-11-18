@@ -1,0 +1,56 @@
+name: Branch Route Validation
+
+on:
+  workflow_call:
+    inputs:
+      uat_branch:
+        required: true
+        type: string
+      prod_branch:
+        required: true
+        type: string
+
+jobs:
+  validate:
+    name: Branch Route Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source and target branches
+        shell: pwsh
+        env:
+          SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+          TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+          UAT_BRANCH: ${{ inputs.uat_branch }}
+          PROD_BRANCH: ${{ inputs.prod_branch }}
+        run: |
+          $source = $env:SOURCE_BRANCH
+          $target = $env:TARGET_BRANCH
+          $uat = $env:UAT_BRANCH
+          $prod = $env:PROD_BRANCH
+          $allowed = $false
+
+          if ($target -eq "main") {
+              $allowed = $true
+          }
+          elseif ($target -eq $uat) {
+              $allowed = ($source -eq "main")
+          }
+          elseif ($target -eq $prod) {
+              $allowed = ($source -eq $uat)
+          }
+          else {
+              $allowed = (
+                  $source -ne "main" -and
+                  $source -ne $uat -and
+                  $source -ne $prod
+              )
+          }
+
+          if ($allowed) {
+              Write-Host "ALLOWED: $source -> $target"
+              exit 0
+          }
+          else {
+              Write-Error "BLOCKED: $source -> $target"
+              exit 1
+          }
