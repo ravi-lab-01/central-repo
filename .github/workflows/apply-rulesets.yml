@@ -14,6 +14,6 @@ jobs:
       - name: Run PowerShell script
         shell: pwsh
         env:
-          GITHUB_TOKEN: "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"
+          GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
         run: |
           ./scripts/Apply-Rulesets.ps1
