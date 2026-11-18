@@ -76,6 +76,7 @@ foreach ($Tenant in $Tenants) {
     $Existing = @(Invoke-RestMethod -Method Get -Uri $BaseUrl -Headers $Headers)
     $ExistingByName = @{}
     foreach ($Item in $Existing) {
+        if (-not [string]::IsNullOrWhiteSpace($Item.name)) {
         $ExistingByName[$Item.name] = $Item.id
     }
 
