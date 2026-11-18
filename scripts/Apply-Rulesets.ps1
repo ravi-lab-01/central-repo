@@ -78,6 +78,7 @@ foreach ($Tenant in $Tenants) {
     foreach ($Item in $Existing) {
         if (-not [string]::IsNullOrWhiteSpace($Item.name)) {
         $ExistingByName[$Item.name] = $Item.id
+        }
     }
 
     $Definitions = @(
